@@ -1,25 +1,19 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: (template) → 1.0.0
-Status: Initial constitution — all placeholders resolved from scratch.
+Version change: 1.0.0 → 1.1.0
+Bump rationale: MINOR — new binding icon-set rule added to Principle IV.
 
-Modified principles: N/A (initial authoring)
+Modified principles:
+  - IV. Nuxt UI & Tailwind First → extended with icon-set constraint (MDI only)
 
-Added sections:
-  - I. Vue & Nuxt Idiomatic Code
-  - II. Realtime-First Architecture
-  - III. Supabase as Backend
-  - IV. Nuxt UI & Tailwind First
-  - V. SPA Rendering Model
-  - Technology Stack & Tooling
-  - Development Workflow
-  - Governance
+Added sections: None
+Removed sections: None
 
 Templates reviewed:
-  ✅ .specify/templates/plan-template.md — Constitution Check section aligns with principles
-  ✅ .specify/templates/spec-template.md — Requirements section aligns; no updates needed
-  ✅ .specify/templates/tasks-template.md — Phase 2 Foundational tasks align (Supabase migrations, Nuxt setup)
+  ✅ .specify/templates/plan-template.md — no icon-specific references; no update needed
+  ✅ .specify/templates/spec-template.md — no icon-specific references; no update needed
+  ✅ .specify/templates/tasks-template.md — no icon-specific references; no update needed
 
 Follow-up TODOs: None — all fields resolved.
 -->
@@ -61,6 +55,12 @@ CSS default utility classes. Project-level color and token overrides are defined
 `text-[#abc]`) are PROHIBITED unless no default utility covers the requirement. Inline styles
 are PROHIBITED.
 
+**Icon set**: All icons MUST use the Material Design Icons set exclusively, referenced via the
+`i-mdi-*` prefix (e.g., `i-mdi-cube-outline`, `i-mdi-refresh`). Other icon collections
+(`heroicons`, `logos`, `tabler`, etc.) are PROHIBITED. The single exception is third-party brand
+assets that have no MDI equivalent and are required for compliance (e.g., OAuth provider buttons
+mandated by the provider's branding guidelines) — such exceptions MUST be documented inline.
+
 ### V. SPA Rendering Model
 
 The application MUST remain SSR-disabled (SPA mode). The index route is prerendered and this
@@ -72,6 +72,7 @@ checks. Server-only logic MUST not be introduced without explicit architectural 
 
 - **Framework**: Nuxt 4 (`app/` directory layout)
 - **UI Library**: `@nuxt/ui` v4 — Tailwind CSS v4 based
+- **Icons**: Material Design Icons (`i-mdi-*`) exclusively
 - **Backend**: Supabase (database, auth, realtime, storage)
 - **Migrations**: SQL files in `supabase/migrations/`, managed via Supabase CLI
 - **Linting**: oxlint with eslint, typescript, unicorn, and vue plugins (type-aware)
@@ -109,4 +110,4 @@ MINOR for new principles or sections, PATCH for clarifications and wording fixes
 **Compliance**: All PRs and plan reviews MUST include a Constitution Check gate that verifies
 adherence to principles I–V before implementation proceeds.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-15 | **Last Amended**: 2026-05-15
+**Version**: 1.1.0 | **Ratified**: 2026-05-15 | **Last Amended**: 2026-05-15
