@@ -1,6 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxt/ui", "@nuxt/a11y", "@nuxt/hints", "@nuxt/image", "@nuxt/scripts"],
+  modules: [
+    "@nuxt/ui",
+    "@nuxt/a11y",
+    "@nuxt/hints",
+    "@nuxt/image",
+    "@nuxt/scripts",
+    "@nuxtjs/supabase",
+  ],
 
   devtools: {
     enabled: true,
@@ -19,3 +26,4 @@ export default defineNuxtConfig({
     viteEnvironmentApi: true,
   },
 });
+

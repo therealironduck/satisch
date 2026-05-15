@@ -19,6 +19,7 @@
     "@nuxt/image": "2.0.0",
     "@nuxt/scripts": "1.1.0",
     "@nuxt/ui": "^4.7.1",
+    "@nuxtjs/supabase": "2.0.8",
     "@unhead/vue": "^2.1.13",
     "nuxt": "^4.4.5",
     "tailwindcss": "^4.3.0"
