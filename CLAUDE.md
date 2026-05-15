@@ -33,5 +33,6 @@ App entry is `app/app.vue`, pages live in `app/pages/`, components in `app/compo
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+at `specs/001-google-oauth-auth/plan.md`.
 
 <!-- SPECKIT END -->
