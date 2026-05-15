@@ -30,6 +30,8 @@ bun run fmt:check    # Check formatting without writing
 App entry is `app/app.vue`, pages live in `app/pages/`, components in `app/components/`. Global CSS at `assets/css/main.css`. App-level Nuxt UI config (colors, tokens) is in `app/app.config.ts`.
 
 <!-- SPECKIT START -->
+
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+
 <!-- SPECKIT END -->
