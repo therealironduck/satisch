@@ -1,0 +1,33 @@
+{
+  "name": "satisch",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix"
+  },
+  "dependencies": {
+    "@nuxt/a11y": "1.0.0-alpha.1",
+    "@nuxt/hints": "1.1.1",
+    "@nuxt/image": "2.0.0",
+    "@nuxt/scripts": "1.1.0",
+    "@nuxt/ui": "^4.7.1",
+    "@unhead/vue": "^2.1.13",
+    "nuxt": "^4.4.5",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.50.0",
+    "oxlint": "^1.65.0",
+    "oxlint-tsgolint": "^0.22.1",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.2.8"
+  }
+}

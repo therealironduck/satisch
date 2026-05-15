@@ -1,0 +1,6 @@
+reviews:
+  path_filters:
+    - "!specs/**"
+    - "!.specify/**"
+    - "!.claude/**"
+  request_changes_workflow: true
