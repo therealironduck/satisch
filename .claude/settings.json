@@ -1,5 +1,6 @@
 {
   "enabledPlugins": {
-    "playwright-skill@playwright-skill": true
+    "playwright-skill@playwright-skill": true,
+    "supabase@claude-plugins-official": true
   }
 }
