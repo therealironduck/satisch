@@ -74,12 +74,15 @@ const client = useSupabaseClient();
 async function signIn() {
   if (!import.meta.client) return;
   loading.value = true;
-  await client.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: window.location.origin + "/confirm",
-    },
-  });
-  loading.value = false;
+  try {
+    await client.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/confirm",
+      },
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 </script>

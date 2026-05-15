@@ -11,10 +11,33 @@ const router = useRouter();
 const route = useRoute();
 
 onMounted(async () => {
-  const code = route.query.code as string | undefined;
-  if (code) {
-    await client.auth.exchangeCodeForSession(code);
+  // @nuxtjs/supabase's plugin calls getSession() on startup, which may auto-exchange
+  // the PKCE code before this handler runs — check for an existing session first.
+  const {
+    data: { session },
+  } = await client.auth.getSession();
+  if (session) {
+    await router.replace("/dashboard");
+    return;
   }
-  await router.push("/dashboard");
+
+  const code = route.query.code as string | undefined;
+  if (!code) {
+    await router.replace("/");
+    return;
+  }
+
+  try {
+    const { error } = await client.auth.exchangeCodeForSession(code);
+    if (error) {
+      await router.replace("/");
+      return;
+    }
+  } catch {
+    await router.replace("/");
+    return;
+  }
+
+  await router.replace("/dashboard");
 });
 </script>
