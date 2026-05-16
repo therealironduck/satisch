@@ -86,18 +86,16 @@ BEGIN
     RETURN jsonb_build_object('success', false, 'error', 'No account found with that email');
   END IF;
 
-  IF EXISTS (
-    SELECT 1 FROM save_game_collaborators
-    WHERE save_game_id = p_save_game_id AND user_id = v_invitee_id
-  ) THEN
+  INSERT INTO save_game_collaborators (save_game_id, user_id, email)
+  VALUES (p_save_game_id, v_invitee_id, v_invitee_email)
+  ON CONFLICT (save_game_id, user_id) DO NOTHING;
+
+  IF NOT FOUND THEN
     RETURN jsonb_build_object('success', false, 'error', 'User already has access');
   END IF;
-
-  INSERT INTO save_game_collaborators (save_game_id, user_id, email)
-  VALUES (p_save_game_id, v_invitee_id, v_invitee_email);
 
   RETURN jsonb_build_object('success', true);
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION invite_save_game_collaborator TO authenticated;
+GRANT EXECUTE ON FUNCTION invite_save_game_collaborator(UUID, TEXT) TO authenticated;

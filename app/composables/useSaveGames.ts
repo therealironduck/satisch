@@ -5,7 +5,8 @@ const saves = ref<SaveGame[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
 let fetched = false;
-let channelReady = false;
+let subscribedCollaboratorsUserId: string | null = null;
+let collaboratorsChannel: any = null;
 let savesChannelReady = false;
 
 export function useSaveGames() {
@@ -49,27 +50,26 @@ export function useSaveGames() {
   onMounted(async () => {
     if (!fetched) await _fetch();
 
-    if (!channelReady) {
-      const userId = user.value?.sub;
-      if (userId) {
-        channelReady = true;
-        client
-          .channel("save_game_collaborators_user")
-          .on(
-            "postgres_changes",
-            {
-              event: "*",
-              schema: "public",
-              table: "save_game_collaborators",
-              filter: `user_id=eq.${userId}`,
-            },
-            () => {
-              fetched = false;
-              void _fetch();
-            },
-          )
-          .subscribe();
-      }
+    const userId = user.value?.id;
+    if (userId && userId !== subscribedCollaboratorsUserId) {
+      if (collaboratorsChannel) void client.removeChannel(collaboratorsChannel);
+      subscribedCollaboratorsUserId = userId;
+      collaboratorsChannel = client
+        .channel("save_game_collaborators_user")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "save_game_collaborators",
+            filter: `user_id=eq.${userId}`,
+          },
+          () => {
+            fetched = false;
+            void _fetch();
+          },
+        )
+        .subscribe();
     }
 
     if (!savesChannelReady) {

@@ -15,6 +15,8 @@ AS $$
   );
 $$;
 
+GRANT EXECUTE ON FUNCTION is_save_game_collaborator(UUID, UUID) TO authenticated;
+
 DROP POLICY save_games_select ON save_games;
 
 CREATE POLICY save_games_select ON save_games

@@ -82,7 +82,7 @@ import type { SaveGame } from "~/types/saveGame";
 
 const props = defineProps<{
   saves: SaveGame[];
-  activeFilter: string;
+  activeFilter: "all" | "owned" | "shared";
   userId: string;
 }>();
 

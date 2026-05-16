@@ -112,7 +112,7 @@ const emit = defineEmits<{
 }>();
 
 const user = useSupabaseUser();
-const currentUserId = computed(() => user.value?.sub ?? "");
+const currentUserId = computed(() => user.value?.id ?? "");
 const isOwner = computed(() => props.save.owner_id === currentUserId.value);
 
 const { refetch: refetchSaves } = useSaveGames();
@@ -136,16 +136,22 @@ async function onInvite() {
 
 async function onRemove(collaboratorId: string) {
   removingId.value = collaboratorId;
-  await composable.remove(collaboratorId);
-  removingId.value = null;
+  try {
+    await composable.remove(collaboratorId);
+  } finally {
+    removingId.value = null;
+  }
 }
 
 async function onLeave(collaboratorId: string) {
   removingId.value = collaboratorId;
-  await composable.leave(collaboratorId);
-  removingId.value = null;
-  emit("update:open", false);
-  void refetchSaves();
+  try {
+    await composable.leave(collaboratorId);
+    emit("update:open", false);
+    void refetchSaves();
+  } finally {
+    removingId.value = null;
+  }
 }
 
 function relativeDate(iso: string): string {

@@ -90,9 +90,7 @@ export function useSaveGameCollaborators(saveGameId: Ref<string>) {
 
   let channel: ReturnType<typeof client.channel> | null = null;
 
-  onMounted(async () => {
-    await fetch();
-
+  function setupChannel() {
     channel = client
       .channel(`save_game_collaborators_${saveGameId.value}`)
       .on(
@@ -106,6 +104,20 @@ export function useSaveGameCollaborators(saveGameId: Ref<string>) {
         () => void fetch(),
       )
       .subscribe();
+  }
+
+  onMounted(async () => {
+    await fetch();
+    setupChannel();
+  });
+
+  watch(saveGameId, async () => {
+    if (channel) {
+      void client.removeChannel(channel);
+      channel = null;
+    }
+    await fetch();
+    setupChannel();
   });
 
   onUnmounted(() => {
