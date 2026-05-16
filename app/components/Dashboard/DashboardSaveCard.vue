@@ -5,9 +5,23 @@
 
       <span class="flex-1 truncate font-medium text-white">{{ save.name }}</span>
 
-      <UBadge label="OWNER" color="neutral" variant="outline" size="xs" />
+      <UBadge
+        :label="isOwner ? 'OWNER' : 'SHARED'"
+        :color="isOwner ? 'warning' : 'neutral'"
+        variant="outline"
+        size="xs"
+      />
 
-      <UDropdownMenu :items="menuItems">
+      <UButton
+        icon="i-mdi-share-variant-outline"
+        label="Share"
+        color="neutral"
+        variant="ghost"
+        size="xs"
+        @click.stop="showShare = true"
+      />
+
+      <UDropdownMenu v-if="isOwner" :items="menuItems">
         <UButton
           color="neutral"
           variant="ghost"
@@ -52,6 +66,8 @@
       @confirm="onDelete"
       @cancel="showDelete = false"
     />
+
+    <LazySaveGameShareModal v-if="showShare" v-model:open="showShare" :save="save" />
   </div>
 </template>
 
@@ -62,36 +78,42 @@ import { SAVE_GAME_COLOR_PALETTE } from "~/types/saveGame";
 
 const props = defineProps<{
   save: SaveGame;
+  userId: string;
 }>();
 
 const expanded = ref(false);
 const showRename = ref(false);
 const showDelete = ref(false);
+const showShare = ref(false);
 
 const { rename, remove } = useSaveGames();
 const toast = useToast();
 
+const isOwner = computed(() => !!props.userId && props.save.owner_id === props.userId);
 const colorMeta = computed(() => SAVE_GAME_COLOR_PALETTE.find((c) => c.name === props.save.color));
 
-const menuItems = computed(() => [
-  [
-    {
-      label: "Rename",
-      icon: "i-mdi-pencil-outline",
-      onSelect: () => {
-        showRename.value = true;
+const menuItems = computed(() => {
+  if (!isOwner.value) return [];
+  return [
+    [
+      {
+        label: "Rename",
+        icon: "i-mdi-pencil-outline",
+        onSelect: () => {
+          showRename.value = true;
+        },
       },
-    },
-    {
-      label: "Delete",
-      icon: "i-mdi-trash-can-outline",
-      color: "error" as const,
-      onSelect: () => {
-        showDelete.value = true;
+      {
+        label: "Delete",
+        icon: "i-mdi-trash-can-outline",
+        color: "error" as const,
+        onSelect: () => {
+          showDelete.value = true;
+        },
       },
-    },
-  ],
-]);
+    ],
+  ];
+});
 
 async function onRename(newName: string) {
   showRename.value = false;

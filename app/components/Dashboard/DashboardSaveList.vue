@@ -13,12 +13,12 @@
     />
 
     <template v-else-if="saves.length > 0">
-      <DashboardSaveCard v-for="save in saves" :key="save.id" :save="save" />
+      <DashboardSaveCard v-for="save in saves" :key="save.id" :save="save" :user-id="userId" />
     </template>
 
     <div v-else class="flex flex-col items-center justify-center py-16 text-neutral-500">
       <UIcon name="i-mdi-folder-outline" class="mb-3 h-10 w-10" />
-      <p class="text-sm">No saves yet — create your first one</p>
+      <p class="text-sm">{{ emptyMessage }}</p>
     </div>
   </div>
 </template>
@@ -26,9 +26,17 @@
 <script setup lang="ts">
 import type { SaveGame } from "~/types/saveGame";
 
-defineProps<{
+const props = defineProps<{
   saves: SaveGame[];
   loading: boolean;
   error: string | null;
+  activeFilter?: "all" | "owned" | "shared";
+  userId: string;
 }>();
+
+const emptyMessage = computed(() => {
+  if (props.activeFilter === "owned") return "No saves owned by you yet";
+  if (props.activeFilter === "shared") return "No saves shared with you yet";
+  return "No saves yet — create your first one";
+});
 </script>
