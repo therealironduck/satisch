@@ -8,6 +8,38 @@ export type Database = {
   };
   public: {
     Tables: {
+      save_game_collaborators: {
+        Row: {
+          added_at: string;
+          email: string;
+          id: string;
+          save_game_id: string;
+          user_id: string;
+        };
+        Insert: {
+          added_at?: string;
+          email: string;
+          id?: string;
+          save_game_id: string;
+          user_id: string;
+        };
+        Update: {
+          added_at?: string;
+          email?: string;
+          id?: string;
+          save_game_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "save_game_collaborators_save_game_id_fkey";
+            columns: ["save_game_id"];
+            isOneToOne: false;
+            referencedRelation: "save_games";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       save_games: {
         Row: {
           color: string;
@@ -40,7 +72,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      invite_save_game_collaborator: {
+        Args: { p_email: string; p_save_game_id: string };
+        Returns: Json;
+      };
     };
     Enums: {
       [_ in never]: never;
@@ -130,6 +165,40 @@ export type TablesUpdate<
       }
       ? U
       : never
+    : never;
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    // oxlint-disable-next-line no-redundant-type-constituents
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never;
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    // oxlint-disable-next-line no-redundant-type-constituents
+    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never;
 
 export const Constants = {

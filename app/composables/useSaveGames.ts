@@ -5,9 +5,12 @@ const saves = ref<SaveGame[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
 let fetched = false;
+let channelReady = false;
+let savesChannelReady = false;
 
 export function useSaveGames() {
   const client = useSupabaseClient();
+  const user = useSupabaseUser();
 
   function _handleUpsert(row: SaveGame) {
     const index = saves.value.findIndex((s) => s.id === row.id);
@@ -22,10 +25,8 @@ export function useSaveGames() {
     saves.value = saves.value.filter((s) => s.id !== id);
   }
 
-  onMounted(async () => {
-    if (fetched) return;
+  async function _fetch() {
     fetched = true;
-
     loading.value = true;
     error.value = null;
 
@@ -43,6 +44,50 @@ export function useSaveGames() {
     }
 
     saves.value = (data as SaveGame[]) ?? [];
+  }
+
+  onMounted(async () => {
+    if (!fetched) await _fetch();
+
+    if (!channelReady) {
+      const userId = user.value?.sub;
+      if (userId) {
+        channelReady = true;
+        client
+          .channel("save_game_collaborators_user")
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "save_game_collaborators",
+              filter: `user_id=eq.${userId}`,
+            },
+            () => {
+              fetched = false;
+              void _fetch();
+            },
+          )
+          .subscribe();
+      }
+    }
+
+    if (!savesChannelReady) {
+      savesChannelReady = true;
+      client
+        .channel("save_games_changes")
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "save_games" },
+          (payload) => _handleUpsert(payload.new as SaveGame),
+        )
+        .on(
+          "postgres_changes",
+          { event: "DELETE", schema: "public", table: "save_games" },
+          (payload) => _handleDelete((payload.old as { id: string }).id),
+        )
+        .subscribe();
+    }
   });
 
   async function create(input: { name: string; color: SaveGameColor }) {
@@ -106,5 +151,10 @@ export function useSaveGames() {
     }
   }
 
-  return { saves, loading, error, create, rename, remove };
+  async function refetch() {
+    fetched = false;
+    await _fetch();
+  }
+
+  return { saves, loading, error, create, rename, remove, refetch };
 }

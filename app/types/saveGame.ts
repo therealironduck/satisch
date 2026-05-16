@@ -18,6 +18,14 @@ export interface SaveGame {
   updated_at: string;
 }
 
+export interface SaveGameCollaborator {
+  id: string;
+  save_game_id: string;
+  user_id: string;
+  email: string;
+  added_at: string;
+}
+
 export interface SaveGameColorMeta {
   name: SaveGameColor;
   label: string;
