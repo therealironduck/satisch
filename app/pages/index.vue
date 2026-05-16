@@ -17,11 +17,8 @@
         class="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-b from-white/5 to-transparent"
       />
 
-      <div class="mb-7 flex items-center gap-2.5">
-        <div class="brand-mark relative size-7 shrink-0 bg-amber-400" />
-        <span class="text-lg font-semibold tracking-tight text-neutral-50">
-          satisch<span class="text-amber-400">.</span>
-        </span>
+      <div class="mb-7">
+        <AppLogo size="sm" />
       </div>
 
       <h1 class="mb-1.5 text-2xl font-semibold tracking-tight text-neutral-50">
