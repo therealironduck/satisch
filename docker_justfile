@@ -1,0 +1,75 @@
+#!/usr/bin/env just --justfile
+
+# Default recipe to display help information
+default:
+    @just --list
+
+# Install every dependency, prepare the database and run seeders
+[group('installation')]
+build: build-composer build-bun build-key build-database
+
+# Install composer dependencies for development
+[group('installation')]
+build-composer:
+    composer install
+
+# Install bun dependencies for development & build assets
+[group('installation')]
+build-bun:
+    bun install
+    bun run build
+
+# Create a new app encryption key
+[group('installation')]
+build-key:
+    php artisan key:generate
+
+# Install the database migrations and run seeders
+[group('installation')]
+build-database:
+    php artisan migrate:fresh --seed
+
+# Run all testing and linting tools
+[group('tests')]
+test: test-pint test-phpstan test-pest test-oxlint test-oxfmt
+
+# Run PHP CS Fixer
+[group('tests')]
+test-pint:
+    ./vendor/bin/pint --parallel
+
+# Run PHPstan
+[group('tests')]
+test-phpstan:
+    ./vendor/bin/phpstan analyse
+
+# Run Pest
+[group('tests')]
+test-pest:
+    php artisan test --coverage --min=100 --coverage-html public/coverage --ci
+
+# Run Oxlint
+[group('tests')]
+test-oxlint:
+    bun run lint:fix
+
+# Run Oxfmt
+[group('tests')]
+test-oxfmt:
+    bun run fmt
+
+# # Run all Queue workers and listeners
+[group('utilities')]
+queue:
+    php artisan queue:listen --queue=default
+
+# # Publish third-party dependencies. Run after `composer update`
+[group('utilities')]
+publish:
+    # php artisan telescope:publish
+
+# # Restart sub-services running on the application. Needed when code is changed which is handled by those services
+[group('utilities')]
+reload:
+    # php artisan reverb:restart
+    # php artisan pulse:restart
