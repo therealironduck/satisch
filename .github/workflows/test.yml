@@ -120,7 +120,7 @@ jobs:
           php artisan key:generate
 
       - name: Run Pest with coverage
-        run: php artisan test --coverage --coverage-html=coverage --min=100 --ci
+        run: php vendor/bin/pest --coverage --coverage-html=coverage --min=100 --ci
 
       - name: Upload coverage report
         if: failure()
