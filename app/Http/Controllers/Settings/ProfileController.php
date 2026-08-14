@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -26,7 +27,10 @@ class ProfileController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         $user = $request->user();
-        assert($user instanceof User);
+
+        if (! $user instanceof User) {
+            throw new AuthenticationException;
+        }
 
         Auth::logout();
 
