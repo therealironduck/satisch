@@ -16,7 +16,7 @@ jobs:
     env:
       FORCE_COLOR: 3
     steps:
-      - uses: dev-build-deploy/commit-me@9475e93cc5df95a8de776dfc55b9754300e1129a # v2.0.0
+      - uses: dev-build-deploy/commit-me@cd1fcc6748302bf7d4568d52f97f8f38c8d26132 # v2.0.1
         with:
           update-labels: false
           include-commits: false
